@@ -1,0 +1,53 @@
+load("@gazelle//:def.bzl", "gazelle")
+load("@rules_go//go:def.bzl", "go_binary", "go_library")
+
+# gazelle:prefix github.com/SlyMarbo/cross
+gazelle(name = "gazelle")
+
+go_library(
+    name = "cross_lib-vdm",
+    srcs = ["main.go"],
+    importpath = "github.com/SlyMarbo/cross",
+    visibility = ["//visibility:private"],
+    deps = ["//vendor/golang.org/x/sys/unix:vdm"],
+)
+
+go_library(
+    name = "cross_lib-gazelle",
+    srcs = ["main.go"],
+    importpath = "github.com/SlyMarbo/cross",
+    visibility = ["//visibility:private"],
+    deps = ["//vendor/golang.org/x/sys/unix:gazelle"],
+)
+
+go_binary(
+    name = "cross-vdm",
+    embed = [":cross_lib-vdm"],
+    visibility = ["//visibility:public"],
+)
+
+go_binary(
+    name = "cross-gazelle",
+    embed = [":cross_lib-gazelle"],
+    visibility = ["//visibility:public"],
+)
+
+go_binary(
+    name = "cross-vdm-amd64",
+    embed = [":cross_lib-vdm"],
+    goarch = "amd64",
+    goos = "linux",
+    pure = "on",
+    static = "on",
+    visibility = ["//visibility:public"],
+)
+
+go_binary(
+    name = "cross-gazelle-amd64",
+    embed = [":cross_lib-gazelle"],
+    goarch = "amd64",
+    goos = "linux",
+    pure = "on",
+    static = "on",
+    visibility = ["//visibility:public"],
+)
